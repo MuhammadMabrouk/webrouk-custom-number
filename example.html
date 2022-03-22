@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webrouk Custom Number Component</title>
+  <style>
+    body {
+      background-color: hsl(225, 6%, 22%);
+      padding: 50px;
+    }
+    webrouk-custom-number::part(root) {
+      position: relative;
+    }
+    webrouk-custom-number::part(input) {
+      display: block;
+      height: 44px;
+      width: 100%;
+      text-align: center;
+      padding: 0 44px;
+    }
+    webrouk-custom-number::part(btn) {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      height: 44px;
+      width: 44px;
+      background-color: blue;
+      color: white;
+    }
+    webrouk-custom-number::part(btn-up) {
+      right: 0;
+    }
+    webrouk-custom-number::part(btn-down) {
+      left: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <webrouk-custom-number>
+    <!-- This input will receive the value from the component (required) -->
+    <input type="hidden">
+  </webrouk-custom-number>
+
+  <!-- webrouk-custom-number component file -->
+  <script src="webrouk-custom-number.js"></script>
+
+  <script>
+    const input = document.querySelector("input");
+    input.addEventListener("change", (e) => console.log(e.target.value));
+  </script>
+</body>
+
+</html>

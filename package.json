@@ -1,0 +1,30 @@
+{
+  "name": "webrouk-custom-number",
+  "version": "1.0.0",
+  "description": "Webrouk Custom Number is a lightweight native JavaScript web component for custom input number.",
+  "main": "webrouk-custom-number.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MuhammadMabrouk/webrouk-custom-number.git"
+  },
+  "keywords": [
+    "input",
+    "number",
+    "input-number",
+    "js",
+    "vanilla",
+    "vanilla-js",
+    "component",
+    "web-component",
+    "webrouk"
+  ],
+  "author": "Muhammad Mabrouk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MuhammadMabrouk/webrouk-custom-number/issues"
+  },
+  "homepage": "https://github.com/MuhammadMabrouk/webrouk-custom-number#readme"
+}
