@@ -120,9 +120,9 @@ class WebroukCustomNumber extends HTMLElement {
   }
 
   _onInputBlur() {
-    if (+this._number.value > this._max) {
+    if (this._max && +this._number.value > this._max) {
       this._number.value = this._max;
-    } else if (+this._number.value < this._min) {
+    } else if (this._min && +this._number.value < this._min) {
       this._number.value = this._min;
     }
   }
