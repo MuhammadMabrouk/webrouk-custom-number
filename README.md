@@ -42,7 +42,7 @@ Using webroukCustomNumber is simple. Configuration over attributes.
 | min | `number` | Specifies the minimum value allowed | `0` |
 | max | `number` | Specifies the maximum value allowed | `null` |
 | step | `number` | Specifies the legal number intervals | `1` |
-| value | `number` | Specifies the default value | `min | 0` |
+| value | `number` | Specifies the default value | `min` &#124; `0` |
 
 ### Styleable Component Parts
 ---
