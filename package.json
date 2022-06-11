@@ -1,6 +1,6 @@
 {
   "name": "webrouk-custom-number",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Webrouk Custom Number is a lightweight native JavaScript web component for custom input number.",
   "main": "webrouk-custom-number.js",
   "scripts": {

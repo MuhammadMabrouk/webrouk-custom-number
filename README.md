@@ -43,6 +43,8 @@ Using webroukCustomNumber is simple. Configuration over attributes.
 | max | `number` | Specifies the maximum value allowed | `null` |
 | step | `number` | Specifies the legal number intervals | `1` |
 | value | `number` | Specifies the default value | `min` &#124; `0` |
+| percent | `boolean` | Whether or not to show the percentage display | `false` |
+| disabled | `boolean` | Specifies the disabled state of the input | `false` |
 
 ### Styleable Component Parts
 ---

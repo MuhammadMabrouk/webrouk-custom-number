@@ -9,8 +9,8 @@ webroukCustomNumberTemplate.innerHTML = `
 
   <div class="webroukNumber" part="root">
     <input type="text" class="webroukNumber__number" part="input">
-    <button class="webroukNumber__btn webroukNumber__btn--up" part="btn btn-up">+</button>
     <button class="webroukNumber__btn webroukNumber__btn--down" part="btn btn-down">-</button>
+    <button class="webroukNumber__btn webroukNumber__btn--up" part="btn btn-up">+</button>
 
     <slot></slot>
   </div>
@@ -22,10 +22,11 @@ class WebroukCustomNumber extends HTMLElement {
   _max;
   _step;
   _value;
+  _disabled;
 
   _number;
-  _upBtn;
   _downBtn;
+  _upBtn;
   _input;
 
   constructor() {
@@ -36,24 +37,27 @@ class WebroukCustomNumber extends HTMLElement {
   }
 
   connectedCallback() {
-    this._min     = +this.getAttribute("min") || 0;
-    this._max     = +this.getAttribute("max") || null;
-    this._step    = +this.getAttribute("step") || 1;
-    this._value   = +this.getAttribute("value") || (this._min || 0);
+    this._min       = +this.getAttribute("min") || 0;
+    this._max       = +this.getAttribute("max") || null;
+    this._step      = +this.getAttribute("step") || 1;
+    this._value     = +this.getAttribute("value") || (this._min || 0);
+    this._percent   = this.getAttribute("percent") || "false";
+    this._disabled  = this.getAttribute("disabled") || "false";
 
-    this._number  = this.shadowRoot.querySelector(".webroukNumber__number");
-    this._upBtn   = this.shadowRoot.querySelector(".webroukNumber__btn--up");
-    this._downBtn = this.shadowRoot.querySelector(".webroukNumber__btn--down");
-    this._input   = this.shadowRoot.querySelector("slot").assignedNodes().find(el => el.nodeName === "INPUT");
+    this._number    = this.shadowRoot.querySelector(".webroukNumber__number");
+    this._upBtn     = this.shadowRoot.querySelector(".webroukNumber__btn--up");
+    this._downBtn   = this.shadowRoot.querySelector(".webroukNumber__btn--down");
+    this._input     = this.shadowRoot.querySelector("slot").assignedNodes().find(el => el.nodeName === "INPUT");
 
-    this._number.value = this._value;
+    this._numberVal(this._value);
+    this._disabled === "true" && (this._number.disabled = true);
 
     this._number.addEventListener("keypress", this._onlyNumberKey.bind(this));
     this._number.addEventListener("paste", this._onlyNumberPaste.bind(this));
     this._number.addEventListener("input", this._onDeleteContent.bind(this));
     this._number.addEventListener("blur", this._onInputBlur.bind(this));
-    this._upBtn.addEventListener("click", this.increase.bind(this));
     this._downBtn.addEventListener("click", this.decrease.bind(this));
+    this._upBtn.addEventListener("click", this.increase.bind(this));
   }
 
   disconnectedCallback() {
@@ -65,25 +69,57 @@ class WebroukCustomNumber extends HTMLElement {
     this._downBtn.removeEventListener("click", this.decrease);
   }
 
+  attributeChangedCallback(name, oldVal, newVal) {
+    if (oldVal === null || oldVal === newVal) { return; }
+
+    if (name === "value") {
+      this._numberVal(newVal);
+    }
+  }
+
+  static get observedAttributes() {
+    return ["value"]
+  }
+
+  decrease() {
+    if (this._numberVal(null, true) > this._min) {
+      const difference = this._numberVal(null, true) - this._min;
+      this._numberVal(this._numberVal(null, true) - (difference < this._step ? difference : this._step));
+      this._onChangeValue();
+    }
+  }
+
   increase() {
     let addedVal = this._step;
 
     if (this._max) {
-      if (+this._number.value >= this._max) { return; }
+      if (this._numberVal(null, true) >= this._max) { return; }
 
-      const difference = this._max - +this._number.value;
+      const difference = this._max - this._numberVal(null, true);
       addedVal = difference < this._step ? difference : this._step;
     }
 
-    this._number.value = +this._number.value + addedVal;
+    this._numberVal(this._numberVal(null, true) + addedVal);
     this._onChangeValue();
   }
 
-  decrease() {
-    if (+this._number.value > this._min) {
-      const difference = +this._number.value - this._min;
-      this._number.value = +this._number.value - (difference < this._step ? difference : this._step);
-      this._onChangeValue();
+  _numberVal(newVal, getNumWithoutPercent = false) {
+    if (newVal !== undefined && newVal !== null) {
+      if (this._percent === "true") {
+        this._number.value = `${newVal}%`;
+      } else {
+        this._number.value = +newVal;
+      }
+    } else {
+      if (this._percent === "true") {
+        if (getNumWithoutPercent) {
+          return +this._number.value.replace("%", "");
+        } else {
+          return `${this._number.value}%`;
+        }
+      } else {
+        return +this._number.value;
+      }
     }
   }
 
@@ -101,11 +137,11 @@ class WebroukCustomNumber extends HTMLElement {
 
   _onlyNumberPaste() {
     setTimeout(() => {
-      const characters = this._number.value;
+      const characters = this._numberVal();
 
       setTimeout(() => {
         if (!(/^\d+$/.test(characters))) {
-          this._number.value = this._number.value.replace(/\D/g, '');
+          this._numberVal(this._number.value.replace(/\D/g, ''));
         } else {
           this._onChangeValue();
         }
@@ -120,15 +156,15 @@ class WebroukCustomNumber extends HTMLElement {
   }
 
   _onInputBlur() {
-    if (this._max && +this._number.value > this._max) {
-      this._number.value = this._max;
-    } else if (this._min && +this._number.value < this._min) {
-      this._number.value = this._min;
+    if (this._max && this._numberVal(null, true) > this._max) {
+      this._numberVal(this._max);
+    } else if (this._min && this._numberVal(null, true) < this._min) {
+      this._numberVal(this._min);
     }
   }
 
   _onChangeValue() {
-    this._input.value = this._number.value;
+    this._input.value = this._numberVal(null, true);
     this._input.dispatchEvent(new Event("change"));
     this._input.dispatchEvent(new Event("input"));
     if (this.closest("form")) {
