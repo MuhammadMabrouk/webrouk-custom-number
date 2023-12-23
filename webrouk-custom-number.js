@@ -50,7 +50,11 @@ class WebroukCustomNumber extends HTMLElement {
     this._input     = this.shadowRoot.querySelector("slot").assignedNodes().find(el => el.nodeName === "INPUT");
 
     this._numberVal(this._value);
-    this._disabled === "true" && (this._number.disabled = true);
+    if (this._disabled === "true") {
+      this._number.disabled = true;
+      this._upBtn.disabled = true;
+      this._downBtn.disabled = true;
+    }
 
     this._number.addEventListener("keypress", this._onlyNumberKey.bind(this));
     this._number.addEventListener("paste", this._onlyNumberPaste.bind(this));
